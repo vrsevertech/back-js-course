@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        .black_square {
+            background-color: black;
+            height: 100px;
+            width: 100px;
+        }
+        #black_squares:target {
+            display: none;
+        }
+        .hide {
+            display: none;
+        }
+        form {
+            display: inline;
+        }
+        .yellow_square {
+            background-color: yellow;
+            height: 100px;
+            width: 100px;
+        }
+        .squares_container {
+            display: flex;
+        }
+        .red_square {
+            background-color: red;
+            height: 50px;
+            width: 50px;
+        }
+        .green_rectangle {
+            background-color: green;
+            height: 20px;
+            width: 50px;
+        }
+        .bar {
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+        .up {
+            position: fixed;
+            bottom: 0;
+            right: 0;
+        }
+        .in {
+            height: 50px;
+            width: 50px;
+            border: solid;
+        }
+        .out {
+            height: 100px;
+            width: 100px;
+            border: solid;
+        }
+        #fullscreen {
+            position: fixed;
+            background-color: gray;
+            top: 0;
+            right: 0;
+            opacity: 50%;
+            height: 100%;
+            width: 100%;
+            z-index: 100;
+        }
+        .scrolloff {
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    <div id="black_squares" class="squares_container"> 
+        <div class="black_square"></div>
+        <div class="black_square"></div>
+        <div class="black_square"></div>
+        <div class="black_square"></div>
+        <div class="black_square"></div>
+    </div>
+    <div class="squares_container">
+        <div class="yellow_square"></div>
+        <div class="red_square" hidden></div>
+        <div class="green_rectangle"></div>
+        <div class="out"><div class="in"></div></div>
+    </div>
+
+    <form><button formaction="#black_squares">css</button></form> <!--https://stackoverflow.com/questions/2906582-->
+    <button id="js">js</button>
+    <button id="cssjs">cssjs</button>
+    |
+    <input id="csssel" type="text" placeholder="css selector">
+    <button id="del">удалить/вернуть</button>
+    <br><br>
+    <div id="imgs"></div>
+    <textarea id="img" placeholder="картинки"></textarea>
+    <br>
+    <button id="getimg">получить</button>
+    <button id="dof">make grey</button>
+    <div class="bar">
+        <div class="cursor"></div>
+    </div>
+    <br><br> 
+    <div contentEditable="true" id="local">редактируй</div>
+    <div contentEditable="true" id="session">этот</div>
+    <div contentEditable="true" id="cookie">прямой сейчас</div>
+
+    <div class="up" hidden>вверх</div>
+
+    <div id="fullscreen" hidden></div>
+</body>
+</html>
+
+<script>
+    const jsBtn = document.querySelector('#js')
+    jsBtn.addEventListener('click', function() {
+        document
+            .querySelectorAll('.black_square')
+            .forEach(e => e.remove())
+    })
+
+    const cssjsBtn = document.querySelector('#cssjs')
+    cssjsBtn.addEventListener('click', function() {
+        document
+            .querySelectorAll('.black_square')
+            .forEach(e => e.classList.toggle('hide'))
+    })
+
+    const delBtn = document.querySelector('#del')
+    const cssselInput = document.querySelector('#csssel')
+    delBtn.addEventListener('click', function() {
+        const csssel = cssselInput.value
+        document
+            .querySelectorAll(csssel)
+            .forEach(e => e.classList.toggle('hide'))
+        
+    })
+
+    document.querySelector('.yellow_square').onclick = function() {
+        alert('привет')
+        this.onclick = function() {
+            this.remove()
+        }
+    }
+
+    const red_square = document.querySelector('.red_square')
+    document.querySelectorAll('button').forEach(e => {
+        e.addEventListener('mouseover', function() {
+            red_square.removeAttribute('hidden')
+        })
+        e.addEventListener('mouseout', function() {
+            red_square.setAttribute('hidden', true)
+        })
+    })
+
+    const green_rectangle = document.querySelector('.green_rectangle')
+    document.querySelectorAll('input').forEach(e => {
+        e.addEventListener('focus', function() {
+            green_rectangle.setAttribute('hidden', true)
+        })
+        e.addEventListener('input', function() {
+            green_rectangle.removeAttribute('hidden')
+        })
+    })
+
+    const imgsDiv = document.querySelector('#imgs')
+    const getimgBtn = document.querySelector('#getimg')
+    const imgInput = document.querySelector('#img')
+    getimgBtn.addEventListener('click', function() {
+        imgInput.value.split('\n').forEach(imgUrl => {
+            let img = document.createElement('img')
+            img.setAttribute('src', imgUrl)
+            imgsDiv.append(img)
+        })
+    })
+
+    const cursorDiv = document.querySelector('.cursor')
+    const body = document.querySelector('body')
+    body.addEventListener('mousemove', e =>
+        cursorDiv.innerHTML = `Х: ${e.clientX}, У: ${e.clientY}`
+    )
+
+    const barDiv = document.querySelector('.bar')
+    barDiv.append(window.navigator.language)
+
+    console.log(window.navigator.geolocation)
+
+    const cookieUserContent = document.cookie
+    const localUserContent = window.localStorage.getItem('userContent')
+    const sessionUserContent = window.sessionStorage.getItem('userContent')
+    const cookieDiv = document.querySelector('#cookie')
+    const sessionDiv = document.querySelector('#session')
+    const localDiv = document.querySelector('#local')
+    if (cookieUserContent) {
+        cookieDiv.innerHTML = cookieUserContent
+    }
+    if (localUserContent) {
+        localDiv.innerHTML = localUserContent
+    }
+    if (sessionUserContent) {
+        sessionDiv.innerHTML = sessionUserContent
+    }
+    cookieDiv.addEventListener('input', function() {
+        document.cookie = this.innerHTML
+    })
+    localDiv.addEventListener('input', function() {
+        window.localStorage.setItem('userContent', this.innerHTML)
+    })
+    sessionDiv.addEventListener('input', function() {
+        window.sessionStorage.setItem('userContent', this.innerHTML)
+    })
+
+    const upDiv = document.querySelector('.up')
+    upDiv.addEventListener('click', function() {
+      window.scrollTo(0, 0)
+    })
+    window.addEventListener('scroll', function() {
+        if(pageYOffset > 0) {
+            upDiv.removeAttribute('hidden')
+        } else {
+            upDiv.setAttribute('hidden', true)
+        }
+    })
+
+    const inDiv = document.querySelector('.in')
+    const outDiv = document.querySelector('.out')
+    inDiv.addEventListener('click', function() {
+        alert()
+    })
+    outDiv.addEventListener('click', function(e) {
+        if(e.target === this)         alert()
+
+    })
+
+    fullsreenDiv = document.querySelector('#fullscreen')
+    dofButton = document.querySelector('#dof')
+    dofButton.addEventListener('click', function() {
+        fullsreenDiv.removeAttribute('hidden')
+        body.classList.toggle('scrolloff')
+    })
+    fullsreenDiv.addEventListener('click', function() {
+        fullsreenDiv.setAttribute('hidden', true)
+        body.classList.toggle('scrolloff')
+    })
+
+</script>
