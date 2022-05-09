@@ -112,6 +112,8 @@
     <div class="up" hidden>вверх</div>
 
     <div id="fullscreen" hidden></div>
+
+    <form id="nogo"><input type="submit" value="GO"></form>
 </body>
 </html>
 
@@ -246,5 +248,9 @@
         fullsreenDiv.setAttribute('hidden', true)
         body.classList.toggle('scrolloff')
     })
+
+    document.querySelector('#nogo').onsubmit = function() {
+        return false
+    }
 
 </script>
