@@ -1,0 +1,24 @@
+{
+  "name": "2.3",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rmdir /s /q dist && tsc",
+    "tcp-server": "npm run build && node dist/tcp.js",
+    "tcp-client": "npm run build && node dist/tcp-client.js",
+    "udp-server": "npm run build && node dist/udp-server.js",
+    "udp-client": "npm run build && node dist/udp-client.js",
+   "http-server": "npm run build && node dist/http-server.js",
+   "http-client": "npm run build && node dist/http-client.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^17.0.34"
+  },
+  "dependencies": {
+    "@types/http-server": "^0.12.1"
+  }
+}
