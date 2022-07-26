@@ -1,0 +1,74 @@
+INSERT INTO books (name, a, column3, ...)
+VALUES (value1, value2, value3, ...);
+22.jpg
+СИ++ И КОМПЬЮТЕРНАЯ ГРАФИКА
+Андрей Богуславский
+23.jpg
+Программирование на языке Go!
+Марк Саммерфильд
+25.jpg
+Толковый словарь сетевых терминов и аббревиатур
+М., Вильямс
+26.jpg
+Python for Data Analysis
+Уэс Маккинни
+27.jpg
+Thinking in Java (4th Edition)
+Брюс Эккель
+29.jpg
+Introduction to Algorithms
+Томас Кормен, Чарльз Лейзерсон, Рональд Ривест, Клиффорд Штайн
+31.jpg
+JavaScript Pocket Reference
+Дэвид Флэнаган
+32.jpg
+Adaptive Code via C#: Class and Interface Design, Design Patterns, and SOLID Principles
+Гэри Маклин Холл
+33.jpg
+SQL: The Complete Referenc
+Джеймс Р. Грофф
+34.jpg
+PHP and MySQL Web Development
+Люк Веллинг
+35.jpg
+Статистический анализ и визуализация данных с помощью R
+Сергей Мастицкий
+36.jpg
+Computer Coding for Kid
+Джон Вудкок
+37.jpg
+Exploring Arduino: Tools and Techniques for Engineering Wizardry
+Джереми Блум
+38.jpg
+Программирование микроконтроллеров для начинающих и не только
+А. Белов
+39.jpg
+The Internet of Things
+Сэмюэл Грингард
+40.jpg
+Sketching User Experiences: The Workbook
+Сет Гринберг
+41.jpg
+InDesign CS6
+Александр Сераков
+42.jpg
+Адаптивный дизайн. Делаем сайты для любых устройств
+Тим Кедлек
+43.jpg
+Android для разработчиков
+Пол Дейтел, Харви Дейтел
+44.jpg
+Clean Code: A Handbook of Agile Software Craftsmanship
+Роберт Мартин
+45.jpg
+Swift Pocket Reference: Programming for iOS and OS X
+Энтони Грей
+46.jpg
+NoSQL Distilled: A Brief Guide to the Emerging World of Polyglot Persistence
+Мартин Фаулер, Прамодкумар Дж. Садаладж
+47.jpg
+Head First Ruby
+Джей Макгаврен
+48.jpg
+Practical Vim
+Дрю Нейл

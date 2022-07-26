@@ -1,0 +1,35 @@
+doctype html
+html(lang="en")
+    head
+        meta(charset="UTF-8")
+        meta(http-equiv="X-UA-Compatible", content="IE=edge")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        link(href='https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css' rel='stylesheet')
+        title Document
+    body 
+        table.table
+            tr
+                td Название
+                td Авторы
+                td Год
+                td Действия
+                td Кликов
+            each book in books 
+                tr 
+                    td= `${book.name}`
+                    td= `${book.authors}`
+                    td= `${book.year}`
+                    td= `${book.delete}`
+                    td= `${book.clicks}`
+        form(action="")
+            input#name(type="text", name="name", placeholder="name")
+            input#year(type="text", name="year", placeholder="year")
+            input#author1(type="text", name="author1", placeholder="author1")
+            input#author2(type="text", name="author2", placeholder="author2")
+            input#author3(type="text", name="author3", placeholder="author3")
+            br
+            textarea#discription(name="discription", placeholder="discription")
+            br
+            input#cover(type="file", name="cover", placeholder="cover")
+            br
+            input(type="submit", value="добавить книгу")
