@@ -12,4 +12,4 @@ app.get('/', (req,res)=>{
     {name: 'two', authors: ['bob', 'tiche'], year: 2020, clicks: 10},
   ]})
 })
-app.listen(3001, () => { console.log(`Example app listening`) }) 
+app.listen(3001, () => { console.log(`Example app listening`) })
