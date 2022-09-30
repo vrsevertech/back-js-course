@@ -1,7 +1,7 @@
-import { db } from './connectDB'
+import { db } from '../connectDB'
 
 // select books by limit and offset
-async function getBooks(offset, limit = 10) {
+export async function getBooks(offset, limit = 10) {
     const q = `select books.name, string_agg(authors.name, ', ') as authors from books
     join books_authors on books_authors.book = books.id
     join authors on authors.id = books_authors.author
@@ -12,7 +12,7 @@ async function getBooks(offset, limit = 10) {
 }
 
 //search 
-async function search(query) {
+export async function search(query) {
     const q = `select books.name, string_agg(authors.name, ', ') as authors from books
     join books_authors on books_authors.book = books.id
     join authors on authors.id = books_authors.author 
@@ -22,7 +22,7 @@ async function search(query) {
 }
 
 //author
-async function getBooksByAuthor(id) {
+export async function getBooksByAuthor(id) {
     const q = `select books.name, string_agg(authors.name, ', ') as authors from books
     join books_authors on books_authors.book = books.id
     join authors on authors.id = books_authors.author
@@ -32,7 +32,7 @@ async function getBooksByAuthor(id) {
 }
 
 //year
-async function getBooksByYear(year) {
+export async function getBooksByYear(year) {
     const q = `select books.name, string_agg(authors.name, ', ') as authors from books
     join books_authors on books_authors.book = books.id
     join authors on authors.id = books_authors.author
@@ -43,7 +43,7 @@ async function getBooksByYear(year) {
 }
 
 //book by id
-async function getBook(id) {
+export async function getBook(id) {
     const q = `select books.name, string_agg(authors.name, ', ') as authors from books
     join books_authors on books_authors.book = books.id
     join authors on authors.id = books_authors.author

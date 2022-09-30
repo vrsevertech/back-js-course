@@ -5,4 +5,3 @@ export const db = new Pool({
     password: '',
     database: 'libcourse'
 })
-

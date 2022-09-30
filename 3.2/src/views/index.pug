@@ -15,12 +15,13 @@ html(lang="en")
                 td Действия
                 td Кликов
             each book in books 
-                tr 
+                <tr> 
                     td= `${book.name}`
                     td= `${book.authors}`
                     td= `${book.year}`
                     td= `${book.delete}`
                     td= `${book.clicks}`
+                </tr>
         form(action="")
             input#name(type="text", name="name", placeholder="name")
             input#year(type="text", name="year", placeholder="year")
