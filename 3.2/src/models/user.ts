@@ -1,7 +1,8 @@
+import { Query, QueryResult } from 'pg'
 import { db } from '../connectDB'
 
 // select books by limit and offset
-export async function getBooks(offset, limit = 10) {
+export async function getBooks(offset:number, limit = 10) {
     const q = `select books.name, string_agg(authors.name, ', ') as authors from books
     join books_authors on books_authors.book = books.id
     join authors on authors.id = books_authors.author
@@ -12,7 +13,7 @@ export async function getBooks(offset, limit = 10) {
 }
 
 //search 
-export async function search(query) {
+export async function search(query:string) {
     const q = `select books.name, string_agg(authors.name, ', ') as authors from books
     join books_authors on books_authors.book = books.id
     join authors on authors.id = books_authors.author 
@@ -22,7 +23,7 @@ export async function search(query) {
 }
 
 //author
-export async function getBooksByAuthor(id) {
+export async function getBooksByAuthor(id:number) {
     const q = `select books.name, string_agg(authors.name, ', ') as authors from books
     join books_authors on books_authors.book = books.id
     join authors on authors.id = books_authors.author
@@ -32,7 +33,7 @@ export async function getBooksByAuthor(id) {
 }
 
 //year
-export async function getBooksByYear(year) {
+export async function getBooksByYear(year:number) {
     const q = `select books.name, string_agg(authors.name, ', ') as authors from books
     join books_authors on books_authors.book = books.id
     join authors on authors.id = books_authors.author
@@ -43,11 +44,11 @@ export async function getBooksByYear(year) {
 }
 
 //book by id
-export async function getBook(id) {
-    const q = `select books.name, string_agg(authors.name, ', ') as authors from books
+export async function getBook(id: number):Promise<QueryResult<any>> {
+    const q = `select books.id, books.name, books.year, string_agg(authors.name, ', ') as authors from books
     join books_authors on books_authors.book = books.id
     join authors on authors.id = books_authors.author
     where books.id = $1
-    group by books.name`
+    group by books.id`
     return await db.query(q, [id])
 }
