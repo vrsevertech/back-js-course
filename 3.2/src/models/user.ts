@@ -9,10 +9,10 @@ export type F = {
 }
 
 enum filters {
-    '', //
-    'search', //by search query  
-    'author', //by author id
-    'year', //by year
+    '', // 
+    'search', //by search query 
+    'author', //by author id 
+    'year', //by year 
 }
 
 const defaultLimit = 20
@@ -38,7 +38,7 @@ export async function getBooks(filters:F, offset = 0, limit = defaultLimit) {
 
 export async function getCountOfBooks(filters:F) {
     const q = `select count(*) from books
-    ${() => filters.search || filters.author ? joinAuthors : ''}
+    ${filters.search || filters.author ? joinAuthors : ''}
     ${where(filters)}`
     return (await db.query(named(q)({...filters}))).rows[0].count as number
 }
