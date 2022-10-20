@@ -1,46 +1,46 @@
 import { Query, QueryResult } from 'pg'
 import { db } from '../connectDB'
+import { pg as named } from 'yesql'
 
-// select books by limit and offset
-export async function getBooks(offset:number, limit = 10) {
-    const q = `select books.name, string_agg(authors.name, ', ') as authors from books
-    join books_authors on books_authors.book = books.id
-    join authors on authors.id = books_authors.author
-    and books.del = false
-    group by books.name
-    limit $1 offset $2`
-    return await db.query(q, [limit, offset])
+export type F = {
+    search?:string,
+    author?:number,
+    year?:number
 }
 
-//search 
-export async function search(query:string) {
-    const q = `select books.name, string_agg(authors.name, ', ') as authors from books
-    join books_authors on books_authors.book = books.id
-    join authors on authors.id = books_authors.author 
-    where authors.name like '$1' or books.name like '$1'
-    group by books.name`
-    return await db.query(q, [query])
+enum filters {
+    '', //
+    'search', //by search query  
+    'author', //by author id
+    'year', //by year
 }
 
-//author
-export async function getBooksByAuthor(id:number) {
-    const q = `select books.name, string_agg(authors.name, ', ') as authors from books
-    join books_authors on books_authors.book = books.id
-    join authors on authors.id = books_authors.author
-    where authors.id = $1
-    group by books.name`
-    return await db.query(q, [id])
+const defaultLimit = 20
+const joinAuthors = `join books_authors on books_authors.book = books.id
+join authors on authors.id = books_authors.author`
+
+function where(filters:F) {
+    let f = `where books.del = false`
+    if (filters.search) f += ` and (authors.name like '%:search%' or books.name like '%:search%')`
+    if (filters.author) f += ` and (authors.id = :author)`
+    if (filters.year)   f += ` and (books.year = :year)`
+    return f
 }
 
-//year
-export async function getBooksByYear(year:number) {
-    const q = `select books.name, string_agg(authors.name, ', ') as authors from books
-    join books_authors on books_authors.book = books.id
-    join authors on authors.id = books_authors.author
-    where books.year = $1
-    group by books.name`
-    return await db.query(q, [year])
+export async function getBooks(filters:F, offset = 0, limit = defaultLimit) {
+    const q = `select books.id, books.name, string_agg(authors.name, ', ') as authors from books
+    ${joinAuthors}
+    ${where(filters)}
+    group by books.id
+    limit :limit offset :offset`
+    return (await db.query(named(q)({offset, limit, ...filters}))).rows
+}
 
+export async function getCountOfBooks(filters:F) {
+    const q = `select count(*) from books
+    ${() => filters.search || filters.author ? joinAuthors : ''}
+    ${where(filters)}`
+    return (await db.query(named(q)({...filters}))).rows[0].count as number
 }
 
 //book by id

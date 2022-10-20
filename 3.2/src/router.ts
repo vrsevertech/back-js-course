@@ -14,4 +14,5 @@ export const router = express.Router();
 //     ]})
 //   })
 
-router.use('/:id', controller.getBook)
+router.get('/book/:id', controller.getBook)
+router.get('/', controller.getBooks)
