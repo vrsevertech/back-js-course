@@ -1,6 +1,7 @@
 import * as userModel from './models/user'
 import { Response, Request } from 'express'
 import { prevNextPageGenerate } from './tools'
+import { F } from './types'
 
 export async function getBook(req: Request, res: Response) {
     const id = req.params.id as unknown as number
@@ -9,17 +10,21 @@ export async function getBook(req: Request, res: Response) {
 }
 
 export async function getBooks(req: Request, res: Response) {
-    let offset = parseInt(req.query.offset as string)
-    if (!offset || offset < 0) offset = 0
+    const filters:F = req.query as F
+    if (!filters.offset || filters.offset < 0) filters.offset = 0
+    if (!filters.limit) filters.limit = 20
 
-    console.log(req.params)
+    if (!filters.limit) filters.limit = 20
 
-    const count = await userModel.getCountOfBooks(req.params as userModel.F)
-    if (offset > count) {
+    console.log(req.query)
+
+    const count = await userModel.getCountOfBooks(req.query)
+    if (filters.offset > count) {
         res.sendStatus(404)
     } else {
-        const pages = prevNextPageGenerate(offset, count)
-        const books = await userModel.getBooks(req.params, offset)
-        res.render('./books-page.pug', { books, pages })
+        const pages = prevNextPageGenerate(filters.offset as number, count)
+        const books = await userModel.getBooks(req.query)
+        const rest = new URLSearchParams(filters as Record<string, string>).toString().replace(/offset=[0-9]*/,'')
+        res.render('./books-page.pug', { books, pages, rest })
     }
 }
