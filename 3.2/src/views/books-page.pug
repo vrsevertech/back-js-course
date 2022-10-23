@@ -35,9 +35,9 @@
 
 center
     if (pages.prev >= 0)
-        a(href=`/?offset=${pages.prev}`) Назад 
+        a(href=`/?offset=${pages.prev}&${rest}`) Назад 
     if (pages.next >= 0)
-        a(href=`/?offset=${pages.next}`) Вперед
+        a(href=`/?offset=${pages.next}&${rest}`) Вперед
 
     </section>
     <section id="footer" class="footer-wrapper">

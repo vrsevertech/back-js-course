@@ -1,12 +1,7 @@
 import { Query, QueryResult } from 'pg'
 import { db } from '../connectDB'
 import { pg as named } from 'yesql'
-
-export type F = {
-    search?:string,
-    author?:number,
-    year?:number
-}
+import { F } from '../types'
 
 enum filters {
     '', // 
@@ -15,25 +10,29 @@ enum filters {
     'year', //by year 
 }
 
-const defaultLimit = 20
+const limit = 20
 const joinAuthors = `join books_authors on books_authors.book = books.id
 join authors on authors.id = books_authors.author`
 
 function where(filters:F) {
     let f = `where books.del = false`
-    if (filters.search) f += ` and (authors.name like '%:search%' or books.name like '%:search%')`
     if (filters.author) f += ` and (authors.id = :author)`
     if (filters.year)   f += ` and (books.year = :year)`
+    if (filters.search) {
+        f += ` and (authors.name like :search or books.name like :search)`
+        filters.search = '%' + filters.search + '%'
+    }
     return f
 }
 
-export async function getBooks(filters:F, offset = 0, limit = defaultLimit) {
+export async function getBooks(filters:F) {
     const q = `select books.id, books.name, string_agg(authors.name, ', ') as authors from books
     ${joinAuthors}
     ${where(filters)}
     group by books.id
     limit :limit offset :offset`
-    return (await db.query(named(q)({offset, limit, ...filters}))).rows
+    console.log(named(q)({defaultLimit: limit, ...filters}))
+    return (await db.query(named(q)(filters))).rows
 }
 
 export async function getCountOfBooks(filters:F) {
