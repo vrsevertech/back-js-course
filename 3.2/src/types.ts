@@ -1,4 +1,3 @@
-
 export type F = {
     search?:string,
     author?:number,

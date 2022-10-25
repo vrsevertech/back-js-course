@@ -3,14 +3,6 @@ import { db } from '../connectDB'
 import { pg as named } from 'yesql'
 import { F } from '../types'
 
-enum filters {
-    '', // 
-    'search', //by search query 
-    'author', //by author id 
-    'year', //by year 
-}
-
-const limit = 20
 const joinAuthors = `join books_authors on books_authors.book = books.id
 join authors on authors.id = books_authors.author`
 
@@ -20,7 +12,7 @@ function where(filters:F) {
     if (filters.year)   f += ` and (books.year = :year)`
     if (filters.search) {
         f += ` and (authors.name like :search or books.name like :search)`
-        filters.search = '%' + filters.search + '%'
+        // filters.search = '%' + filters.search + '%'
     }
     return f
 }
@@ -31,7 +23,6 @@ export async function getBooks(filters:F) {
     ${where(filters)}
     group by books.id
     limit :limit offset :offset`
-    console.log(named(q)({defaultLimit: limit, ...filters}))
     return (await db.query(named(q)(filters))).rows
 }
 
@@ -39,7 +30,7 @@ export async function getCountOfBooks(filters:F) {
     const q = `select count(*) from books
     ${filters.search || filters.author ? joinAuthors : ''}
     ${where(filters)}`
-    return (await db.query(named(q)({...filters}))).rows[0].count as number
+    return (await db.query(named(q)(filters))).rows[0].count as number
 }
 
 //book by id
