@@ -12,20 +12,22 @@ function where(filters:F) {
     if (filters.year)   f += ` and (books.year = :year)`
     if (filters.search) {
         f += ` and (authors.name like :search or books.name like :search)`
-        // filters.search = '%' + filters.search + '%'
+        filters.search = '%' + filters.search + '%'
     }
     return f
 }
 
 export async function getBooks(filters:F) {
+    const limit = 20
     const q = `select books.id, books.name, string_agg(authors.name, ', ') as authors from books
     ${joinAuthors}
     ${where(filters)}
     group by books.id
     limit :limit offset :offset`
-    return (await db.query(named(q)(filters))).rows
+    return (await db.query(named(q)({limit, ...filters}))).rows
 }
 
+//!!BUG if http://localhost:3001/?search=c
 export async function getCountOfBooks(filters:F) {
     const q = `select count(*) from books
     ${filters.search || filters.author ? joinAuthors : ''}

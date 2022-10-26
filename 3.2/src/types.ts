@@ -1,7 +1,6 @@
 export type F = {
     search?:string,
-    author?:number,
-    year?:number,
-    offset?:number,
-    limit?:number,
+    author?:string,
+    year?:string,
+    offset?:string,
 }
