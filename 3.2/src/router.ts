@@ -16,3 +16,4 @@ export const router = express.Router();
 
 router.get('/book/:id', controller.getBook)
 router.get('/', controller.getBooks)
+router.get('/admin')
