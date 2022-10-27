@@ -27,9 +27,8 @@ export async function getBooks(filters:F) {
     return (await db.query(named(q)({limit, ...filters}))).rows
 }
 
-//!!BUG if http://localhost:3001/?search=c
 export async function getCountOfBooks(filters:F) {
-    const q = `select count(*) from books
+    const q = `select count(distinct books.id) from books
     ${filters.search || filters.author ? joinAuthors : ''}
     ${where(filters)}`
     return (await db.query(named(q)(filters))).rows[0].count as number

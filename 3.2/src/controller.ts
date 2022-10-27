@@ -24,3 +24,14 @@ export async function getBooks(req: Request, res: Response) {
         res.render('./books-page.pug', { books, pages, rest })
     }
 }
+
+//book name
+//year
+//author
+//author
+//author
+//discription
+//img
+export async function addBook(req: Request, res: Response) {
+    req.params
+}
