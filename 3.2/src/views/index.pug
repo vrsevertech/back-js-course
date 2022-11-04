@@ -21,15 +21,15 @@ html(lang="en")
                     td= `${book.year}`
                     td= `${book.delete}`
                     td= `${book.clicks}`
-        form(action="")
-            input#name(type="text", name="name", placeholder="name")
-            input#year(type="text", name="year", placeholder="year")
-            input#author1(type="text", name="author1", placeholder="author1")
-            input#author2(type="text", name="author2", placeholder="author2")
-            input#author3(type="text", name="author3", placeholder="author3")
+        form(method="post", enctype="multipart/form-data")
+            input#name(type="text", name="name", placeholder="name", required)
+            input#year(type="text", name="year", placeholder="year", required)
+            input#author1(type="text", name="authors[0]", placeholder="author1", required)
+            input#author2(type="text", name="authors[1]", placeholder="author2")
+            input#author3(type="text", name="authors[2]", placeholder="author3")
             br
             textarea#discription(name="discription", placeholder="discription")
             br
-            input#cover(type="file", name="cover", placeholder="cover")
+            input#cover(type="file", name="cover", placeholder="cover", required)
             br
             input(type="submit", value="добавить книгу")

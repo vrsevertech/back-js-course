@@ -1,8 +1,9 @@
 import { Query, QueryResult } from 'pg'
-import { db } from '../connectDB'
+import { db } from './connectDB'
 import { pg as named } from 'yesql'
-import { F } from '../types'
+import { F } from './types'
 
+const selectBooks = `select books.id, books.name, books.img, string_agg(authors.name, ', ') as authors from books`
 const joinAuthors = `join books_authors on books_authors.book = books.id
 join authors on authors.id = books_authors.author`
 
@@ -19,7 +20,7 @@ function where(filters:F) {
 
 export async function getBooks(filters:F) {
     const limit = 20
-    const q = `select books.id, books.name, string_agg(authors.name, ', ') as authors from books
+    const q = `${selectBooks}
     ${joinAuthors}
     ${where(filters)}
     group by books.id
@@ -34,12 +35,25 @@ export async function getCountOfBooks(filters:F) {
     return (await db.query(named(q)(filters))).rows[0].count as number
 }
 
-//book by id
 export async function getBook(id: number):Promise<QueryResult<any>> {
-    const q = `select books.id, books.name, books.year, string_agg(authors.name, ', ') as authors from books
-    join books_authors on books_authors.book = books.id
-    join authors on authors.id = books_authors.author
+    const q = `${selectBooks}
+    ${joinAuthors}
     where books.id = $1
     group by books.id`
     return await db.query(q, [id])
+}
+
+export async function addBook(book: {
+    name:string, 
+    authors:string[], 
+    year:number,
+    img:string,
+}) {
+    const bookId = (await db.query(named(`insert into books (name, year, img) values (:name, :year, :img) returning id`)(book))).rows[0].id
+    book.authors.forEach(async (author) => {
+        if (author) {
+            const authorId = (await db.query(named(`insert into authors (name) values (:author) returning id`)({author}))).rows[0].id
+            db.query(named(`insert into books_authors (book, author) values (:bookId, :authorId)`)({bookId, authorId}))
+        }
+    })
 }

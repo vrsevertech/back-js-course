@@ -1,10 +1,5 @@
 import express from 'express'
-//import controller from './controler'
-import bodyParser from 'body-parser'
 import * as controller from './controller'
-
-const urlEncodedParser = bodyParser.urlencoded({extended : false})
-
 export const router = express.Router();
 
 // router.use('/', (req,res)=>{
@@ -16,4 +11,7 @@ export const router = express.Router();
 
 router.get('/book/:id', controller.getBook)
 router.get('/', controller.getBooks)
-router.get('/admin')
+router.get('/admin', controller.admin)
+
+import multer from 'multer'
+router.post('/admin', multer({dest: './src/views/imgs'}).single('cover'), controller.addBook)
