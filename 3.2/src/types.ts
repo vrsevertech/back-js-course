@@ -3,4 +3,5 @@ export type F = {
     author?:string,
     year?:string,
     offset?:string,
+    limit?:string,
 }

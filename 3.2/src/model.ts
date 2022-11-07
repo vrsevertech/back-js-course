@@ -3,9 +3,9 @@ import { db } from './connectDB'
 import { pg as named } from 'yesql'
 import { F } from './types'
 
-const selectBooks = `select books.id, books.name, books.img, string_agg(authors.name, ', ') as authors from books`
-const joinAuthors = `join books_authors on books_authors.book = books.id
-join authors on authors.id = books_authors.author`
+const selectBooks = `select books.id, books.name, books.img, books.clicks, string_agg(authors.name, ', ') as authors from books`
+const joinAuthors = `left join books_authors on books_authors.book = books.id
+left join authors on authors.id = books_authors.author`
 
 function where(filters:F) {
     let f = `where books.del = false`
@@ -19,13 +19,12 @@ function where(filters:F) {
 }
 
 export async function getBooks(filters:F) {
-    const limit = 20
     const q = `${selectBooks}
     ${joinAuthors}
     ${where(filters)}
     group by books.id
     limit :limit offset :offset`
-    return (await db.query(named(q)({limit, ...filters}))).rows
+    return (await db.query(named(q)(filters))).rows
 }
 
 export async function getCountOfBooks(filters:F) {
@@ -40,6 +39,11 @@ export async function getBook(id: number):Promise<QueryResult<any>> {
     ${joinAuthors}
     where books.id = $1
     group by books.id`
+    return await db.query(q, [id])
+}
+
+export async function delBook(id: string) {
+    const q = `update books set del=true where id=$1`
     return await db.query(q, [id])
 }
 

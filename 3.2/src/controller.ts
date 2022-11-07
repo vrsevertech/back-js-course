@@ -14,22 +14,36 @@ export async function getBooks(req: Request, res: Response) {
     req.query.offset = offset.toString()
 
     const count = await model.getCountOfBooks(req.query)
-    if (offset > count) {
-        res.sendStatus(404)
-    } else {
+    if (offset < count) {
         const pages = prevNextPageGenerate(offset, count)
-        const books = await model.getBooks(req.query)
+        const books = await model.getBooks({limit: '20', ...req.query})
         const rest = new URLSearchParams(req.query as Record<string, string>).toString().replace(/offset=[0-9]*/,'')
         res.render('./books-page.pug', { books, pages, rest })
+    } else {
+        res.sendStatus(404)
     }
 }
 
 export async function admin(req: Request, res: Response) {
-    const books = await model.getBooks({offset: '0'})
-    res.render('./index.pug', {books})
+    let offset = parseInt(req.query.offset as string)
+    if (!offset || offset < 0) offset = 0
+    req.query.offset = offset.toString()
+    
+    const count = await model.getCountOfBooks(req.query)
+    if (offset < count) {
+        const books = await model.getBooks({limit: '5', ...req.query})
+        res.render('./index.pug', {books, pages: Math.ceil(count/5)})
+    } else {
+        res.sendStatus(404)
+    }
 }
 
 export async function addBook(req: Request, res: Response) {
     await model.addBook({img: req.file?.filename, ...req.body})
+    admin(req, res)
+}
+
+export async function delBook(req: Request, res: Response) {
+    const r = await model.delBook(req.query.id as string)
     admin(req, res)
 }

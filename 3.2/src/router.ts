@@ -15,3 +15,5 @@ router.get('/admin', controller.admin)
 
 import multer from 'multer'
 router.post('/admin', multer({dest: './src/views/imgs'}).single('cover'), controller.addBook)
+
+router.get('/admin/:id', controller.delBook)
