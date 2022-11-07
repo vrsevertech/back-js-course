@@ -1,11 +1,23 @@
 import * as model from './model'
 import { Response, Request, query } from 'express'
-import { prevNextPageGenerate } from './tools'
+import { prevNextPageGenerate, pagesNumsGenerate } from './tools'
 
 export async function getBook(req: Request, res: Response) {
-    const id = req.params.id as unknown as number
-    const book = await model.getBook(id)
-    res.render('./book-page.pug', book.rows[0])
+    const id = parseInt(req.params.id as string)
+    if (id) {    
+        try {
+            const book = (await model.getBook(id)).rows[0]
+            if (book) {
+                res.render('./book-page.pug', book)
+            } else {
+                res.status(404).json({erorr: 'такой книги нет'})
+            }
+        } catch(err) {
+            res.status(500).json(err)
+        }
+    } else {
+        res.status(400).json({error: 'идентификатор должен быть целым числом'})
+    }
 }
 
 export async function getBooks(req: Request, res: Response) {
@@ -20,7 +32,7 @@ export async function getBooks(req: Request, res: Response) {
         const rest = new URLSearchParams(req.query as Record<string, string>).toString().replace(/offset=[0-9]*/,'')
         res.render('./books-page.pug', { books, pages, rest })
     } else {
-        res.sendStatus(404)
+        res.status(404).json({error: 'страница не найдена'})
     }
 }
 
@@ -32,18 +44,19 @@ export async function admin(req: Request, res: Response) {
     const count = await model.getCountOfBooks(req.query)
     if (offset < count) {
         const books = await model.getBooks({limit: '5', ...req.query})
-        res.render('./index.pug', {books, pages: Math.ceil(count/5)})
+        const pages = await pagesNumsGenerate(offset, count)
+        res.render('./index.pug', {books, pages})
     } else {
-        res.sendStatus(404)
+        res.status(404).json({error: 'страница не найдена'})
     }
 }
 
-export async function addBook(req: Request, res: Response) {
-    await model.addBook({img: req.file?.filename, ...req.body})
+export async function addDelBook(req: Request, res: Response) {
+    if (req.body.del) {
+        await model.delBook(req.body.del)
+    } else {
+        await model.addBook({img: req.file?.filename, ...req.body})
+    }
     admin(req, res)
 }
 
-export async function delBook(req: Request, res: Response) {
-    const r = await model.delBook(req.query.id as string)
-    admin(req, res)
-}

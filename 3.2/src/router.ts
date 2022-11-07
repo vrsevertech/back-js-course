@@ -1,5 +1,7 @@
 import express from 'express'
 import * as controller from './controller'
+import multer from 'multer'
+
 export const router = express.Router();
 
 // router.use('/', (req,res)=>{
@@ -12,8 +14,4 @@ export const router = express.Router();
 router.get('/book/:id', controller.getBook)
 router.get('/', controller.getBooks)
 router.get('/admin', controller.admin)
-
-import multer from 'multer'
-router.post('/admin', multer({dest: './src/views/imgs'}).single('cover'), controller.addBook)
-
-router.get('/admin/:id', controller.delBook)
+router.post('/admin', multer({dest: './src/views/imgs'}).single('cover'), controller.addDelBook)

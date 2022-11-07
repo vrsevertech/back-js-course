@@ -23,6 +23,7 @@ export async function getBooks(filters:F) {
     ${joinAuthors}
     ${where(filters)}
     group by books.id
+    order by books.id
     limit :limit offset :offset`
     return (await db.query(named(q)(filters))).rows
 }
@@ -57,7 +58,7 @@ export async function addBook(book: {
     book.authors.forEach(async (author) => {
         if (author) {
             const authorId = (await db.query(named(`insert into authors (name) values (:author) returning id`)({author}))).rows[0].id
-            db.query(named(`insert into books_authors (book, author) values (:bookId, :authorId)`)({bookId, authorId}))
+            await db.query(named(`insert into books_authors (book, author) values (:bookId, :authorId)`)({bookId, authorId}))
         }
     })
 }

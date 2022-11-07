@@ -20,19 +20,23 @@ html(lang="en")
                     td= `${book.authors}`
                     td= `${book.year}`
                     td
-                        a(href=`/admin/${book.id}`) удалить
+                        form(method=`post`)
+                            button(name=`del`, value=`${book.id}`) удалить
                     td= `${book.clicks}`
                 
         center 
-            - for (page=0; page<=count/limit; page++) {
-                - if (page*limit==offset) b
-                    a(href=`/admin?offset=${page*limit}`)= `${page}`
+            each page in pages 
+                - if (page.current) {
+                    b
+                        a(href=`/admin?offset=${page.offset}`)= `${page.num}`
+                - } else {
+                    a(href=`/admin?offset=${page.offset}`)= `${page.num}`
+                - }
                     span 
-            - }
         
         form(method="post", enctype="multipart/form-data")
             input#name(type="text", name="name", placeholder="name", required)
-            input#year(type="text", name="year", placeholder="year", required)
+            input#year(type="number", name="year", placeholder="year", required)
             input#author1(type="text", name="authors[0]", placeholder="author1", required)
             input#author2(type="text", name="authors[1]", placeholder="author2")
             input#author3(type="text", name="authors[2]", placeholder="author3")
