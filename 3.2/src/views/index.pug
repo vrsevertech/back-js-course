@@ -19,8 +19,17 @@ html(lang="en")
                     td= `${book.name}`
                     td= `${book.authors}`
                     td= `${book.year}`
-                    td= `${book.delete}`
+                    td
+                        a(href=`/admin/${book.id}`) удалить
                     td= `${book.clicks}`
+                
+        center 
+            - for (page=0; page<=count/limit; page++) {
+                - if (page*limit==offset) b
+                    a(href=`/admin?offset=${page*limit}`)= `${page}`
+                    span 
+            - }
+        
         form(method="post", enctype="multipart/form-data")
             input#name(type="text", name="name", placeholder="name", required)
             input#year(type="text", name="year", placeholder="year", required)
@@ -33,3 +42,4 @@ html(lang="en")
             input#cover(type="file", name="cover", placeholder="cover", required)
             br
             input(type="submit", value="добавить книгу")
+        
