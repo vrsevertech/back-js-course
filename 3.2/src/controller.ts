@@ -53,10 +53,19 @@ export async function admin(req: Request, res: Response) {
 
 export async function addDelBook(req: Request, res: Response) {
     if (req.body.del) {
-        await model.delBook(req.body.del)
+        await model.markBookAsDel(req.body.del)
     } else {
         await model.addBook({img: req.file?.filename, ...req.body})
     }
     admin(req, res)
 }
 
+export async function click(req: Request, res: Response) {
+    await model.click(+req.params.id)
+    console.log('c')
+}
+
+export async function view(req: Request, res: Response) {
+    await model.view(+req.params.id)
+    console.log('v')
+}

@@ -1,6 +1,13 @@
 import express from 'express'
 import { router } from './src/router'
 import bodyParser from 'body-parser'
+import { delAllMarkBooks } from './src/model'
+import { makeBackup } from './backupDB'
+import { CronJob } from 'cron'
+
+//https://crontab.guru/
+(new CronJob('* * * * *', makeBackup)).start();
+(new CronJob('* * * * *', delAllMarkBooks)).start()
 
 const app = express()
 app.use(express.static('./src/views'))

@@ -1,3 +1,4 @@
-let a = 'u4'
-let b:number
-b = parseInt(a)
+import { CronJob } from 'cron'
+
+const job = new CronJob('1-59 * * * * *', () => console.log('d'))
+job.start()

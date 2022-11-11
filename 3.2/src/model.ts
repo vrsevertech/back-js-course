@@ -3,7 +3,7 @@ import { db } from './connectDB'
 import { pg as named } from 'yesql'
 import { F } from './types'
 
-const selectBooks = `select books.id, books.name, books.img, books.clicks, string_agg(authors.name, ', ') as authors from books`
+const selectBooks = `select books.id, books.name, books.img, books.clicks, books.year, string_agg(authors.name, ', ') as authors from books`
 const joinAuthors = `left join books_authors on books_authors.book = books.id
 left join authors on authors.id = books_authors.author`
 
@@ -43,7 +43,7 @@ export async function getBook(id: number):Promise<QueryResult<any>> {
     return await db.query(q, [id])
 }
 
-export async function delBook(id: string) {
+export async function markBookAsDel(id: string) {
     const q = `update books set del=true where id=$1`
     return await db.query(q, [id])
 }
@@ -61,4 +61,21 @@ export async function addBook(book: {
             await db.query(named(`insert into books_authors (book, author) values (:bookId, :authorId)`)({bookId, authorId}))
         }
     })
+}
+
+export async function delAllMarkBooks() {
+    const ids = (await db.query(`delete from books where del=true returning id`)).rows
+    console.log(`удалено ${ids.length} записей в books`)
+    ids.forEach(async (id) => {
+        const author = (await db.query(`delete from books_authors where book=$1 returning author`, [id.id])).rows
+        console.log(`также удалено ${author.length} связаних c книгой id=${id.id} записей в books_authors`)
+    })
+}
+
+export async function click(bookId:number) {
+    await db.query('update books set clicks=clicks+1 where id=$1', [bookId])
+}
+
+export async function view(bookId:number) {
+    await db.query('update books set views=views+1 where id=$1', [bookId])
 }

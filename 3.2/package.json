@@ -1,10 +1,13 @@
 {
   "dependencies": {
+    "@getvim/execute": "^1.0.0",
     "@types/express": "^4.17.14",
     "@types/multer": "^1.4.7",
     "@types/pg": "^8.6.5",
     "@types/pg-promise": "^5.4.3",
     "@types/yesql": "^4.1.1",
+    "cron": "^2.1.0",
+    "dotenv": "^16.0.3",
     "express": "^4.18.1",
     "multer": "^1.4.5-lts.1",
     "node-ts": "^5.1.2",
@@ -17,5 +20,8 @@
     "typescript": "^4.8.2",
     "yesql": "^5.0.0",
     "zod": "^3.19.1"
+  },
+  "devDependencies": {
+    "@types/cron": "^2.0.0"
   }
 }

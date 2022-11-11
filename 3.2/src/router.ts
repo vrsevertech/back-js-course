@@ -15,3 +15,6 @@ router.get('/book/:id', controller.getBook)
 router.get('/', controller.getBooks)
 router.get('/admin', controller.admin)
 router.post('/admin', multer({dest: './src/views/imgs'}).single('cover'), controller.addDelBook)
+
+router.post('/api/view/:id', controller.view)
+router.post('/api/click/:id', controller.click)

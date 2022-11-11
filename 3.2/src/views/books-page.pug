@@ -25,7 +25,9 @@
                 each book in books
                     .book_item.col-xs-6.col-sm-3.col-md-2.col-lg-2(data-book-id=`${book.id}`)
                         .book
-                            a(href=`/book/${book.id}`)
+                            //not suppurt edge: https://www.w3schools.com/tags/att_a_ping.asp
+                            //and firefox: https://stackoverflow.com/questions/2581249/how-do-i-use-the-firefox-ping-attribute
+                            a(href=`/book/${book.id}`, ping=`/api/view/${book.id}`)
                                 img(src=`/imgs/${book.img}`, alt=`${book.name}`)
                                 .blockI(data-title=`${book.name}`, style='height: 46px;')
                                     .title.size_text(data-book-title=`${book.name}`)=`${book.name}`
