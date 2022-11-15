@@ -69,3 +69,8 @@ export async function view(req: Request, res: Response) {
     await model.view(+req.params.id)
     console.log('v')
 }
+
+export async function logout(req: Request, res: Response) {
+    //https://habr.com/ru/post/488388/
+    res.sendStatus(401)
+}
