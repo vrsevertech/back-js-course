@@ -1,6 +1,6 @@
 import * as model from './model'
-import { Response, Request, query } from 'express'
-import { prevNextPageGenerate, pagesNumsGenerate } from './tools'
+import { Response, Request } from 'express'
+import { prevNextPageGenerate, pagesNumsGenerate } from './paginationTools'
 
 export async function getBook(req: Request, res: Response) {
     const id = parseInt(req.params.id as string)
