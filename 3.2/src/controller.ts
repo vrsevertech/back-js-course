@@ -62,12 +62,10 @@ export async function addDelBook(req: Request, res: Response) {
 
 export async function click(req: Request, res: Response) {
     await model.click(+req.params.id)
-    console.log('c')
 }
 
 export async function view(req: Request, res: Response) {
     await model.view(+req.params.id)
-    console.log('v')
 }
 
 export async function logout(req: Request, res: Response) {
