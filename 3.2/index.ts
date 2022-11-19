@@ -6,7 +6,7 @@ import { makeBackup } from './backupDB'
 import { CronJob } from 'cron'
 
 //https://crontab.guru/
-//(new CronJob('* * * * *', makeBackup)).start();
+(new CronJob('* 1 * * *', makeBackup)).start();
 (new CronJob('1 * * * *', delAllMarkBooks)).start()
 
 const app = express()

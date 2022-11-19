@@ -1,11 +1,19 @@
 import { Query, QueryResult } from 'pg'
 import { db } from './connectDB'
 import { pg as named } from 'yesql'
-import { F } from './types'
 
 const selectBooks = `select books.id, books.name, books.img, books.clicks, books.year, string_agg(authors.name, ', ') as authors from books`
 const joinAuthors = `left join books_authors on books_authors.book = books.id
 left join authors on authors.id = books_authors.author`
+
+type F = {
+    search?:string,
+    author?:string,
+    year?:string,
+    offset?:string,
+    limit?:string,
+}
+
 
 function where(filters:F) {
     let f = `where books.del = false`
